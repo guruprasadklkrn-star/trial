@@ -39,7 +39,7 @@
 
     .footer-line { border-top: 1px solid #87CEFA; margin-top: 10px; }
 
-    #finalShopAddress { font-weight: bold; font-size: 13px; text-align: center; margin-top: 2px; display:block; }
+    #finalShopAddress { font-weight: bold; font-size: 13px; text-align: center; margin-top: 2px; }
     #shopTagline { font-size: 12px; font-style: italic; text-align: center; margin-top: 5px; }
 
     @media print {
@@ -59,26 +59,26 @@
 <body>
 
 <div class="container" id="invoice">
-  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
+  <!-- HEADER WITH BOLD, CENTERED ADDRESS AND TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
     <div style="text-align:center;">
       <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-        style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; font-weight:bold;">
+        style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; font-weight:bold; display:block; margin:0 auto;">
         <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
         <option value="manual">Enter Manually</option>
       </select>
 
       <input type="text" id="manualShopAddress"
-        style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold;"
+        style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold; display:block; margin:0 auto;"
         placeholder="Enter Shop Address Here" />
 
-      <span id="finalShopAddress"></span>
-    </div>
+      <span id="finalShopAddress" style="font-weight:bold; font-size:13px; display:block; text-align:center; margin-top:2px;"></span>
 
-    <!-- TAGLINE: ALWAYS VISIBLE -->
-    <div id="shopTagline">Your Trusted Laundry Partner!</div>
+      <!-- TAGLINE: ALWAYS VISIBLE -->
+      <div id="shopTagline">Your Trusted Laundry Partner!</div>
+    </div>
   </div>
 
   <div class="line"></div>
