@@ -59,6 +59,7 @@
 <body>
 
 <div class="container" id="invoice">
+  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
@@ -68,12 +69,14 @@
       <option value="manual">Enter Manually</option>
     </select>
 
+    <!-- MANUAL ADDRESS: BOLD & CENTER -->
     <input type="text" id="manualShopAddress"
-      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold; width:100%; margin:0 auto; display:block;"
+      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold;"
       placeholder="Enter Shop Address Here" />
 
     <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
 
+    <!-- TAGLINE: ALWAYS VISIBLE -->
     <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
@@ -96,6 +99,7 @@
 
   <div class="line"></div>
 
+  <!-- Dynamic Rows Table -->
   <table>
     <thead>
       <tr>
@@ -125,6 +129,7 @@
     </tbody>
   </table>
 
+  <!-- Extra Services Table -->
   <table>
     <thead>
       <tr><th>Service Type</th><th>Price</th><th>Qty</th><th>Amount</th></tr>
@@ -145,6 +150,7 @@
     </tbody>
   </table>
 
+  <!-- Totals -->
   <div class="totals">
     <div class="left">
       <p><strong>Timings:</strong> 9:00 am to 9:00 pm</p>
@@ -163,6 +169,7 @@
   <div class="footer-line"></div>
 </div>
 
+<!-- Save/Print buttons -->
 <div style="text-align:center; margin-top:20px;">
   <button onclick="saveAsPDF()">Save to PDF</button>
   <button onclick="prepareShopAddressForOutput(); window.print(); restoreShopAddressAfterOutput();">Print</button>
@@ -206,7 +213,9 @@
     let lastRow = rows[rows.length - 1];
     let desc = lastRow.querySelector(".desc-input").value.trim();
     let qty = lastRow.querySelector(".qty").value.trim();
-    if (desc !== "" && qty !== "") { addRow(); }
+    if (desc !== "" && qty !== "") {
+      addRow();
+    }
   }
 
   function addRow() {
