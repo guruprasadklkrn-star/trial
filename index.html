@@ -39,7 +39,16 @@
 
     .footer-line { border-top: 1px solid #87CEFA; margin-top: 10px; }
 
-    #finalShopAddress { font-weight: bold; font-size: 13px; text-align: center; margin-top: 2px; }
+    /* Bold and centered address */
+    #shopAddressSelect, #manualShopAddress, #finalShopAddress {
+      display: block;
+      margin: auto;
+      font-weight: bold;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    #finalShopAddress { margin-top: 2px; }
     #shopTagline { font-size: 12px; font-style: italic; text-align: center; margin-top: 5px; }
 
     @media print {
@@ -59,23 +68,22 @@
 <body>
 
 <div class="container" id="invoice">
-  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
-    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;">
+    <!-- Dropdown Address -->
+    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)">
       <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
       <option value="manual">Enter Manually</option>
     </select>
 
-    <input type="text" id="manualShopAddress"
-      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;"
-      placeholder="Enter Shop Address Here" />
+    <!-- Manual Address Input -->
+    <input type="text" id="manualShopAddress" style="display:none;" placeholder="Enter Shop Address Here" />
 
-    <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
+    <!-- Final Displayed Address -->
+    <span id="finalShopAddress" style="display:none;"></span>
 
-    <!-- TAGLINE: ALWAYS VISIBLE -->
+    <!-- Tagline -->
     <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
@@ -98,7 +106,6 @@
 
   <div class="line"></div>
 
-  <!-- Dynamic Rows Table -->
   <table>
     <thead>
       <tr>
@@ -128,7 +135,6 @@
     </tbody>
   </table>
 
-  <!-- Extra Services Table -->
   <table>
     <thead>
       <tr><th>Service Type</th><th>Price</th><th>Qty</th><th>Amount</th></tr>
@@ -149,7 +155,6 @@
     </tbody>
   </table>
 
-  <!-- Totals -->
   <div class="totals">
     <div class="left">
       <p><strong>Timings:</strong> 9:00 am to 9:00 pm</p>
@@ -168,7 +173,6 @@
   <div class="footer-line"></div>
 </div>
 
-<!-- Save/Print buttons -->
 <div style="text-align:center; margin-top:20px;">
   <button onclick="saveAsPDF()">Save to PDF</button>
   <button onclick="prepareShopAddressForOutput(); window.print(); restoreShopAddressAfterOutput();">Print</button>
@@ -177,130 +181,134 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-  function calculateRow(input) {
-    let row = input.closest("tr");
-    let price = parseFloat(row.querySelector(".price")?.value) || 0;
-    let qty = parseFloat(row.querySelector(".qty")?.value) || 0;
-    row.querySelector(".amount").innerText = (price * qty).toFixed(2);
-    calculateTotal();
-    addRowIfNeeded();
-  }
+function calculateRow(input) {
+  let row = input.closest("tr");
+  let price = parseFloat(row.querySelector(".price")?.value) || 0;
+  let qty = parseFloat(row.querySelector(".qty")?.value) || 0;
+  row.querySelector(".amount").innerText = (price * qty).toFixed(2);
+  calculateTotal();
+  addRowIfNeeded();
+}
 
-  function calculateExtra(el) {
-    const row = el.closest('tr');
-    const qtyInput = row.querySelector('.extra-qty');
-    const priceInput = row.querySelector('.extra-price');
-    const qty = parseFloat(qtyInput.value || 0);
-    const price = parseFloat(priceInput.value || 0);
-    qtyInput.dataset.price = price;
-    row.querySelector('.extra-amount').innerText = (price * qty).toFixed(2);
-    calculateTotal();
-  }
+function calculateExtra(el) {
+  const row = el.closest('tr');
+  const qtyInput = row.querySelector('.extra-qty');
+  const priceInput = row.querySelector('.extra-price');
+  const qty = parseFloat(qtyInput.value || 0);
+  const price = parseFloat(priceInput.value || 0);
+  qtyInput.dataset.price = price;
+  row.querySelector('.extra-amount').innerText = (price * qty).toFixed(2);
+  calculateTotal();
+}
 
-  function calculateTotal() {
-    let subtotal = 0;
-    document.querySelectorAll(".amount, .extra-amount").forEach(span => {
-      subtotal += parseFloat(span.innerText) || 0;
-    });
-    document.getElementById("subtotal").innerText = subtotal.toFixed(2);
-    let discount = parseFloat(document.getElementById("discount").value) || 0;
-    document.getElementById("gross").innerText = (subtotal - discount).toFixed(2);
-  }
+function calculateTotal() {
+  let subtotal = 0;
+  document.querySelectorAll(".amount, .extra-amount").forEach(span => {
+    subtotal += parseFloat(span.innerText) || 0;
+  });
+  document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+  let discount = parseFloat(document.getElementById("discount").value) || 0;
+  document.getElementById("gross").innerText = (subtotal - discount).toFixed(2);
+}
 
-  function addRowIfNeeded() {
-    let rows = document.querySelectorAll("#bill-body tr");
-    let lastRow = rows[rows.length - 1];
-    let desc = lastRow.querySelector(".desc-input").value.trim();
-    let qty = lastRow.querySelector(".qty").value.trim();
-    if (desc !== "" && qty !== "") {
-      addRow();
-    }
-  }
+function addRowIfNeeded() {
+  let rows = document.querySelectorAll("#bill-body tr");
+  let lastRow = rows[rows.length - 1];
+  let desc = lastRow.querySelector(".desc-input").value.trim();
+  let qty = lastRow.querySelector(".qty").value.trim();
+  if (desc !== "" && qty !== "") { addRow(); }
+}
 
-  function addRow() {
-    let tbody = document.getElementById("bill-body");
-    let rowCount = tbody.rows.length + 1;
-    let newRow = document.createElement("tr");
-    newRow.innerHTML = `
-      <td>${rowCount}</td>
-      <td><input type="text" class="desc-input" /></td>
-      <td><input type="text" /></td>
-      <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
-      <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-      <td><span class="amount">0.00</span></td>
-    `;
-    tbody.appendChild(newRow);
-    newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
-    newRow.querySelector(".qty").addEventListener("input", addRowIfNeeded);
-  }
+function addRow() {
+  let tbody = document.getElementById("bill-body");
+  let rowCount = tbody.rows.length + 1;
+  let newRow = document.createElement("tr");
+  newRow.innerHTML = `
+    <td>${rowCount}</td>
+    <td><input type="text" class="desc-input" /></td>
+    <td><input type="text" /></td>
+    <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
+    <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
+    <td><span class="amount">0.00</span></td>
+  `;
+  tbody.appendChild(newRow);
+  newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
+  newRow.querySelector(".qty").addEventListener("input", addRowIfNeeded);
+}
 
-  function toggleShopAddressInput(select) {
-    const manualInput = document.getElementById("manualShopAddress");
-    if (select.value === "manual") {
-      select.style.display = "none";
-      manualInput.style.display = "block";
-      manualInput.focus();
-    } else {
-      manualInput.style.display = "none";
-      select.style.display = "block";
-    }
-  }
-
-  function prepareShopAddressForOutput() {
-    const select = document.getElementById("shopAddressSelect");
-    const manualInput = document.getElementById("manualShopAddress");
-    const finalSpan = document.getElementById("finalShopAddress");
-    let value = "";
-    if (manualInput.style.display !== "none" && manualInput.value.trim() !== "") {
-      value = manualInput.value;
-    } else {
-      value = select.options[select.selectedIndex].text;
-    }
-    finalSpan.textContent = value;
-    finalSpan.style.display = "block";
+function toggleShopAddressInput(select) {
+  const manualInput = document.getElementById("manualShopAddress");
+  if (select.value === "manual") {
     select.style.display = "none";
+    manualInput.style.display = "block";
+    manualInput.focus();
+  } else {
     manualInput.style.display = "none";
+    select.style.display = "block";
+  }
+}
+
+function prepareShopAddressForOutput() {
+  const select = document.getElementById("shopAddressSelect");
+  const manualInput = document.getElementById("manualShopAddress");
+  const finalSpan = document.getElementById("finalShopAddress");
+  let value = "";
+
+  if (manualInput.style.display !== "none" && manualInput.value.trim() !== "") {
+    value = manualInput.value;
+  } else {
+    value = select.options[select.selectedIndex].text;
   }
 
-  function restoreShopAddressAfterOutput() {
-    const select = document.getElementById("shopAddressSelect");
-    const manualInput = document.getElementById("manualShopAddress");
-    const finalSpan = document.getElementById("finalShopAddress");
-    finalSpan.style.display = "none";
-    if (manualInput.value.trim() !== "") {
-      manualInput.style.display = "block";
-    } else {
-      select.style.display = "block";
-    }
-  }
+  finalSpan.textContent = value;
+  finalSpan.style.display = "block";
+  finalSpan.style.textAlign = "center";
+  finalSpan.style.fontWeight = "bold";
+  select.style.display = "none";
+  manualInput.style.display = "none";
+}
 
-  function saveAsPDF() {
-    const invoice = document.getElementById('invoice');
-    const orderIdInput = Array.from(invoice.querySelectorAll('label'))
-      .find(label => label.textContent.includes('Order ID'));
-    const orderId = orderIdInput ? (orderIdInput.querySelector('input')?.value || 'No_Order_ID') : 'No_Order_ID';
-    prepareShopAddressForOutput();
-    const inputs = invoice.querySelectorAll('input');
-    inputs.forEach(input => {
-      if (input.id === "manualShopAddress") return;
-      const span = document.createElement('span');
-      span.textContent = input.value;
-      span.className = 'input-value';
-      input.parentNode.insertBefore(span, input.nextSibling);
-      input.style.display = 'none';
-    });
-    html2pdf().set({
-      margin: 5,
-      filename: `Murugan_Laundry_Bill_${orderId}.pdf`,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 2, scrollY: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).from(invoice).save().then(() => {
-      inputs.forEach(input => input.style.display = '');
-      invoice.querySelectorAll('.input-value').forEach(span => span.remove());
-      restoreShopAddressAfterOutput();
-    });
+function restoreShopAddressAfterOutput() {
+  const select = document.getElementById("shopAddressSelect");
+  const manualInput = document.getElementById("manualShopAddress");
+  const finalSpan = document.getElementById("finalShopAddress");
+
+  finalSpan.style.display = "none";
+  if (manualInput.value.trim() !== "") {
+    manualInput.style.display = "block";
+  } else {
+    select.style.display = "block";
   }
+}
+
+function saveAsPDF() {
+  const invoice = document.getElementById('invoice');
+  const orderIdInput = Array.from(invoice.querySelectorAll('label'))
+    .find(label => label.textContent.includes('Order ID'));
+  const orderId = orderIdInput ? (orderIdInput.querySelector('input')?.value || 'No_Order_ID') : 'No_Order_ID';
+  prepareShopAddressForOutput();
+  const inputs = invoice.querySelectorAll('input');
+  inputs.forEach(input => {
+    if (input.id === "manualShopAddress") return;
+    const span = document.createElement('span');
+    span.textContent = input.value;
+    span.className = 'input-value';
+    input.parentNode.insertBefore(span, input.nextSibling);
+    input.style.display = 'none';
+  });
+  html2pdf().set({
+    margin: 5,
+    filename: `Murugan_Laundry_Bill_${orderId}.pdf`,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 2, scrollY: 0 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }).from(invoice).save().then(() => {
+    inputs.forEach(input => input.style.display = '');
+    invoice.querySelectorAll('.input-value').forEach(span => span.remove());
+    restoreShopAddressAfterOutput();
+  });
+}
 </script>
+
 </body>
 </html>
