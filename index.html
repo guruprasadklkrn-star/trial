@@ -63,13 +63,13 @@
     <h2>MURUGAN LAUNDRY</h2>
 
     <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; font-weight:bold; display:block; margin:0 auto;">
-      <option value="default" style="font-weight:bold;">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
-      <option value="manual" style="font-weight:bold;">Enter Manually</option>
+      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;">
+      <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
+      <option value="manual">Enter Manually</option>
     </select>
 
     <input type="text" id="manualShopAddress"
-      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold;"
+      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold; width:100%; margin:0 auto; display:block;"
       placeholder="Enter Shop Address Here" />
 
     <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
@@ -82,7 +82,7 @@
   <div class="info">
     <div style="width: 48%;">
       <label>Customer Name: <input type="text" /></label><br /><br />
-      <label>Contact No: <input type="text" /></label><br /><br />
+      <label>Contact No.: <input type="text" /></label><br /><br />
       <label>Customer Address: <input type="text" style="width: 100%;" /></label>
     </div>
     <div style="width: 48%;">
@@ -206,9 +206,7 @@
     let lastRow = rows[rows.length - 1];
     let desc = lastRow.querySelector(".desc-input").value.trim();
     let qty = lastRow.querySelector(".qty").value.trim();
-    if (desc !== "" && qty !== "") {
-      addRow();
-    }
+    if (desc !== "" && qty !== "") { addRow(); }
   }
 
   function addRow() {
