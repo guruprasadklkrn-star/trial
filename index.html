@@ -62,23 +62,19 @@
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
-    <div style="text-align:center;">
-      <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-        style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; font-weight:bold; display:block; margin:0 auto;">
-        <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
-        <option value="manual">Enter Manually</option>
-      </select>
+    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
+      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; font-weight:bold; display:block; margin:0 auto;">
+      <option value="default" style="font-weight:bold;">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
+      <option value="manual" style="font-weight:bold;">Enter Manually</option>
+    </select>
 
-      <!-- Manual input hidden initially -->
-      <input type="text" id="manualShopAddress"
-        style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold; display:block; margin:0 auto;"
-        placeholder="Enter Shop Address Here" />
+    <input type="text" id="manualShopAddress"
+      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; font-weight:bold;"
+      placeholder="Enter Shop Address Here" />
 
-      <span id="finalShopAddress" style="font-weight:bold; font-size:13px; display:block; text-align:center; margin-top:2px;"></span>
+    <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
 
-      <!-- TAGLINE: ALWAYS VISIBLE -->
-      <div id="shopTagline">Your Trusted Laundry Partner!</div>
-    </div>
+    <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
   <div class="line"></div>
@@ -100,7 +96,6 @@
 
   <div class="line"></div>
 
-  <!-- Dynamic Rows Table -->
   <table>
     <thead>
       <tr>
@@ -130,7 +125,6 @@
     </tbody>
   </table>
 
-  <!-- Extra Services Table -->
   <table>
     <thead>
       <tr><th>Service Type</th><th>Price</th><th>Qty</th><th>Amount</th></tr>
@@ -151,7 +145,6 @@
     </tbody>
   </table>
 
-  <!-- Totals -->
   <div class="totals">
     <div class="left">
       <p><strong>Timings:</strong> 9:00 am to 9:00 pm</p>
@@ -170,7 +163,6 @@
   <div class="footer-line"></div>
 </div>
 
-<!-- Save/Print buttons -->
 <div style="text-align:center; margin-top:20px;">
   <button onclick="saveAsPDF()">Save to PDF</button>
   <button onclick="prepareShopAddressForOutput(); window.print(); restoreShopAddressAfterOutput();">Print</button>
@@ -306,4 +298,3 @@
 </script>
 </body>
 </html>
-
