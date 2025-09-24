@@ -10,28 +10,20 @@
     .container {
       width: 100%; max-width: 700px; margin: auto; padding: 10px;
       border: 2px solid #87CEFA; box-sizing: border-box; background: white; border-radius: 8px;
-      page-break-inside: avoid;
     }
 
-    /* Header */
-    .header { text-align: center; background: #E0F7FA; color: black; padding: 12px 0; border-radius: 6px 6px 0 0; }
+    .header { text-align: center; background: #E0F7FA; padding: 10px; border-radius: 6px 6px 0 0; }
     .header h2 { font-size: 20px; margin: 0; font-weight: bold; }
-    .header p { font-size: 12px; margin: 3px 0; }
-    .header .tagline { font-size: 11px; font-style: italic; margin-top: 2px; }
+    .line { border-bottom: 1px solid #87CEFA; margin: 6px 0; }
 
-    .line { border-bottom: 1px solid #87CEFA; margin: 8px 0; }
-
-    /* Info */
     .info { display: flex; justify-content: space-between; font-size: 12px; margin-top: 5px; }
     .info input { width: 100%; padding: 4px; font-size: 12px; border: none; border-bottom: 1px dotted #555; background: transparent; outline: none; }
 
-    /* Table */
-    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; page-break-inside: avoid; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
     table, th, td { border: 1px solid #ccc; }
     th { background: #B3E5FC; color: black; padding: 5px; }
     td { padding: 4px; text-align: center; }
     tr:nth-child(even) { background: #f0f9ff; }
-    tr { page-break-inside: avoid; }
 
     input[type="text"], input[type="number"], input[type="date"] {
       box-sizing: border-box; padding: 2px; font-size: 11px;
@@ -40,7 +32,6 @@
     .desc-input { width: 100%; }
     .small-input { width: 45px; }
 
-    /* Totals */
     .totals { display: flex; justify-content: space-between; margin-top: 10px; }
     .totals .left, .totals .right { width: 48%; font-size: 11px; }
     .totals .right td { text-align: left; }
@@ -48,8 +39,8 @@
 
     .footer-line { border-top: 1px solid #87CEFA; margin-top: 10px; }
 
-    /* Shop address output */
-    #finalShopAddress { font-weight: bold; }
+    #finalShopAddress { font-weight: bold; font-size: 13px; text-align: center; margin-top: 2px; }
+    #shopTagline { font-size: 12px; font-style: italic; text-align: center; margin-top: 5px; }
 
     @media print {
       button { display: none; }
@@ -68,22 +59,24 @@
 <body>
 
 <div class="container" id="invoice">
+  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
-    <p>
-      <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-        style="display:block; margin:0 auto; border:none; border-bottom:1px dotted #555;
-               background:transparent; outline:none; font-size:13px; text-align:center; width:fit-content;">
-        <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
-        <option value="manual">Enter Manually</option>
-      </select>
-      <input type="text" id="manualShopAddress"
-        style="display:none; margin:0 auto; border:none; border-bottom:1px dotted #555;
-               background:transparent; outline:none; font-size:13px; text-align:center; width:fit-content;"
-        placeholder="Enter Shop Address Here" />
-      <span id="finalShopAddress"
-        style="display:none; font-size:13px; text-align:center; display:block; margin:0 auto; width:fit-content;"></span>
-    </p>
+
+    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
+      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;">
+      <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
+      <option value="manual">Enter Manually</option>
+    </select>
+
+    <input type="text" id="manualShopAddress"
+      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;"
+      placeholder="Enter Shop Address Here" />
+
+    <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
+
+    <!-- TAGLINE: ALWAYS VISIBLE -->
+    <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
   <div class="line"></div>
@@ -117,7 +110,22 @@
         <th>Amount</th>
       </tr>
     </thead>
-    <tbody id="bill-body"></tbody>
+    <tbody id="bill-body">
+      <script>
+        for (let i = 1; i <= 10; i++) {
+          document.write(`
+            <tr>
+              <td>${i}</td>
+              <td><input type="text" class="desc-input" /></td>
+              <td><input type="text" /></td>
+              <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
+              <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
+              <td><span class="amount">0.00</span></td>
+            </tr>
+          `);
+        }
+      </script>
+    </tbody>
   </table>
 
   <!-- Extra Services Table -->
@@ -169,22 +177,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const tbody = document.getElementById('bill-body');
-    for (let i = 1; i <= 10; i++) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i}</td>
-        <td><input type="text" class="desc-input" /></td>
-        <td><input type="text" /></td>
-        <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
-        <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-        <td><span class="amount">0.00</span></td>
-      `;
-      tbody.appendChild(tr);
-    }
-  });
-
   function calculateRow(input) {
     let row = input.closest("tr");
     let price = parseFloat(row.querySelector(".price")?.value) || 0;
@@ -298,10 +290,10 @@
       input.style.display = 'none';
     });
     html2pdf().set({
-      margin: [5, 5, 5, 5],
+      margin: 5,
       filename: `Murugan_Laundry_Bill_${orderId}.pdf`,
       image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 2, scrollY: 0, useCORS: true, allowTaint: true },
+      html2canvas: { scale: 2, scrollY: 0 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).from(invoice).save().then(() => {
       inputs.forEach(input => input.style.display = '');
