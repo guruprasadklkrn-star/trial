@@ -59,23 +59,26 @@
 <body>
 
 <div class="container" id="invoice">
-  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
+  <!-- HEADER WITH MANUAL ADDRESS FIX AND TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
-    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
-      style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;">
-      <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
-      <option value="manual">Enter Manually</option>
-    </select>
+    <!-- Shop address container -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+      <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
+        style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; width:300px;">
+        <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
+        <option value="manual">Enter Manually</option>
+      </select>
 
-    <input type="text" id="manualShopAddress"
-      style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center;"
-      placeholder="Enter Shop Address Here" />
+      <input type="text" id="manualShopAddress"
+        style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; width:300px; margin:0 auto;"
+        placeholder="Enter Shop Address Here" />
 
-    <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
+      <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
+    </div>
 
-    <!-- TAGLINE: ALWAYS VISIBLE -->
+    <!-- TAGLINE -->
     <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
