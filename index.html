@@ -39,12 +39,7 @@
 
     .footer-line { border-top: 1px solid #87CEFA; margin-top: 10px; }
 
-    #finalShopAddress, #shopAddressSelect, #manualShopAddress {
-      font-weight: bold;
-      font-size: 20px; /* same as heading */
-      text-align: center;
-    }
-
+    #finalShopAddress { font-weight: bold; font-size: 13px; text-align: center; margin-top: 2px; }
     #shopTagline { font-size: 12px; font-style: italic; text-align: center; margin-top: 5px; }
 
     @media print {
@@ -64,22 +59,26 @@
 <body>
 
 <div class="container" id="invoice">
-  <!-- HEADER WITH ALWAYS VISIBLE TAGLINE -->
   <div class="header">
     <h2>MURUGAN LAUNDRY</h2>
 
-    <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)">
-      <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
-      <option value="manual">Enter Manually</option>
-    </select>
+    <!-- Shop address container with proper centering -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+      <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
+        style="border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; width:300px;">
+        <option value="default">10th Cross, Patel Layout, Balagere Road, Varthur, Bangalore - 87</option>
+        <option value="manual">Enter Manually</option>
+      </select>
 
-    <input type="text" id="manualShopAddress"
-      style="display:none;" placeholder="Enter Shop Address Here" />
+      <input type="text" id="manualShopAddress"
+        style="display:none; border:none; border-bottom:1px dotted #555; background:transparent; outline:none; font-size:13px; text-align:center; width:300px; margin:0 auto;"
+        placeholder="Enter Shop Address Here" />
 
-    <span id="finalShopAddress" style="display:none;"></span>
+      <span id="finalShopAddress" style="display:none; font-weight:bold; font-size:13px; text-align:center; margin-top:2px;"></span>
+    </div>
 
-    <!-- TAGLINE: ALWAYS VISIBLE -->
-    <div id="shopTagline">"Clean Clothes, Happy Life"</div>
+    <!-- Tagline: always visible -->
+    <div id="shopTagline">Your Trusted Laundry Partner!</div>
   </div>
 
   <div class="line"></div>
@@ -87,7 +86,7 @@
   <div class="info">
     <div style="width: 48%;">
       <label>Customer Name: <input type="text" /></label><br /><br />
-      <label>Contact No: <input type="text" /></label><br /><br />
+      <label>Contact No.: <input type="text" /></label><br /><br />
       <label>Customer Address: <input type="text" style="width: 100%;" /></label>
     </div>
     <div style="width: 48%;">
@@ -307,4 +306,3 @@
 </script>
 </body>
 </html>
-
