@@ -5,50 +5,28 @@
   <title>Murugan Laundry Bill</title>
   <style>
     @page { size: A4; margin: 10mm; }
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
-
-    .container {
-      width: 100%; max-width: 700px; margin: auto; padding: 10px;
-      border: 2px solid #87CEFA; box-sizing: border-box; background: white; border-radius: 8px;
-    }
-
-    /* Header */
-    .header { text-align: center; background: #E0F7FA; color: black; padding: 12px 0; border-radius: 6px 6px 0 0; }
-    .header h2 { font-size: 20px; margin: 0; font-weight: bold; }
-    .header p { font-size: 12px; margin: 3px 0; }
-    .header .tagline { font-size: 11px; font-style: italic; margin-top: 2px; }
-
-    .line { border-bottom: 1px solid #87CEFA; margin: 8px 0; }
-
-    /* Info */
-    .info { display: flex; justify-content: space-between; font-size: 12px; margin-top: 5px; }
-    .info input { width: 100%; padding: 4px; font-size: 12px; border: none; border-bottom: 1px dotted #555; background: transparent; outline: none; }
-
-    /* Table */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .container { width: 100%; max-width: 700px; margin: auto; padding: 5px; border: 2px solid black; box-sizing: border-box; }
+    .header { text-align: center; }
+    .header h2 { font-size: 18px; margin: 0; text-decoration: underline; }
+    .header p { margin: 3px 0; font-size: 13px; }
+    .line { border-bottom: 1px solid black; margin: 6px 0; }
+    .info { display: flex; justify-content: space-between; font-size: 12px; }
+    .info input { width: 100%; padding: 3px; font-size: 12px; border: none; border-bottom: 1px dotted #555; background: transparent; outline: none; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
-    table, th, td { border: 1px solid #ccc; }
-    th { background: #B3E5FC; color: black; padding: 5px; }
-    td { padding: 4px; text-align: center; }
-    tr:nth-child(even) { background: #f0f9ff; }
-
+    table, th, td { border: 1px solid black; }
+    th, td { padding: 2px; text-align: center; }
     input[type="text"], input[type="number"], input[type="date"] {
       box-sizing: border-box; padding: 2px; font-size: 11px;
       border: none; border-bottom: 1px dotted #555; background: transparent; outline: none;
     }
     .desc-input { width: 100%; }
     .small-input { width: 45px; }
-
-    /* Totals */
-    .totals { display: flex; justify-content: space-between; margin-top: 10px; }
+    .totals { display: flex; justify-content: space-between; margin-top: 8px; }
     .totals .left, .totals .right { width: 48%; font-size: 11px; }
     .totals .right td { text-align: left; }
-    .totals .right td:last-child { font-weight: bold; }
-
-    .footer-line { border-top: 1px solid #87CEFA; margin-top: 10px; }
-
-    /* Shop address output */
-    #finalShopAddress { font-weight: bold; }
-
+    .footer-line { border-top: 1px solid black; margin-top: 10px; }
+    .tagline { font-size:11px; font-style:italic; margin-top:4px; }
     @media print {
       button { display: none; }
       body { margin: 0; }
@@ -82,6 +60,8 @@
       <span id="finalShopAddress"
         style="display:none; font-size:13px; text-align:center; display:block; margin:0 auto; width:fit-content;"></span>
     </p>
+    <!-- Tagline placed below address -->
+    <div class="tagline">Fresh, Clean, and Delivered for You</div>
   </div>
 
   <div class="line"></div>
@@ -115,7 +95,32 @@
         <th>Amount</th>
       </tr>
     </thead>
-    <tbody id="bill-body"></tbody>
+    <tbody id="bill-body">
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          for (let i = 1; i <= 10; i++) {
+            addRow();
+          }
+        });
+
+        function addRow() {
+          let tbody = document.getElementById("bill-body");
+          let rowCount = tbody.rows.length + 1;
+          let newRow = document.createElement("tr");
+          newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" class="desc-input" /></td>
+            <td><input type="text" /></td>
+            <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
+            <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
+            <td><span class="amount">0.00</span></td>
+          `;
+          tbody.appendChild(newRow);
+          newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
+          newRow.querySelector(".qty").addEventListener("input", addRowIfNeeded);
+        }
+      </script>
+    </tbody>
   </table>
 
   <!-- Extra Services Table -->
@@ -167,24 +172,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-  // Generate 10 initial rows dynamically
-  window.addEventListener('DOMContentLoaded', () => {
-    const tbody = document.getElementById('bill-body');
-    for (let i = 1; i <= 10; i++) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i}</td>
-        <td><input type="text" class="desc-input" /></td>
-        <td><input type="text" /></td>
-        <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
-        <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-        <td><span class="amount">0.00</span></td>
-      `;
-      tbody.appendChild(tr);
-    }
-  });
-
-  // All your JS logic remains exactly the same
   function calculateRow(input) {
     let row = input.closest("tr");
     let price = parseFloat(row.querySelector(".price")?.value) || 0;
@@ -225,23 +212,7 @@
     }
   }
 
-  function addRow() {
-    let tbody = document.getElementById("bill-body");
-    let rowCount = tbody.rows.length + 1;
-    let newRow = document.createElement("tr");
-    newRow.innerHTML = `
-      <td>${rowCount}</td>
-      <td><input type="text" class="desc-input" /></td>
-      <td><input type="text" /></td>
-      <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
-      <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-      <td><span class="amount">0.00</span></td>
-    `;
-    tbody.appendChild(newRow);
-    newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
-    newRow.querySelector(".qty").addEventListener("input", addRowIfNeeded);
-  }
-
+  // Shop Address helpers
   function toggleShopAddressInput(select) {
     const manualInput = document.getElementById("manualShopAddress");
     if (select.value === "manual") {
