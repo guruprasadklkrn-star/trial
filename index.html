@@ -65,7 +65,7 @@
 <div class="container" id="invoice">
   <!-- HEADER WITH LOGO, SHOP NAME, AND TAGLINE -->
   <div class="header">
-    <img id="logoImg" src="" alt="Murugan Laundry Logo">
+    <img src="https://raw.githubusercontent.com/guruprasadklkrn-star/trial/5947bfbf2157ba6c92aa8f1b91f13caecc17efeb/logo.png" alt="Murugan Laundry Logo">
     <h2>MURUGAN LAUNDRY</h2>
 
     <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
@@ -126,7 +126,7 @@
               <td><input type="text" /></td>
               <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
               <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-              <td><span class="amount">0.00</span></td>
+              <td><span class="amount"></span></td>
             </tr>
           `);
         }
@@ -144,13 +144,13 @@
         <td>Wash & Iron Kg</td>
         <td><input type="number" class="extra-price" value="100" oninput="calculateExtra(this)" /></td>
         <td><input type="number" class="extra-qty" data-price="100" oninput="calculateExtra(this)" /></td>
-        <td><span class="extra-amount">0.00</span></td>
+        <td><span class="extra-amount"></span></td>
       </tr>
       <tr>
         <td>Wash & Fold Kg</td>
         <td><input type="number" class="extra-price" value="75" oninput="calculateExtra(this)" /></td>
         <td><input type="number" class="extra-qty" data-price="75" oninput="calculateExtra(this)" /></td>
-        <td><span class="extra-amount">0.00</span></td>
+        <td><span class="extra-amount"></span></td>
       </tr>
     </tbody>
   </table>
@@ -166,7 +166,7 @@
         <tr><td>Sub Total</td><td>:</td><td><span id="subtotal">0.00</span></td></tr>
         <tr><td>Discount</td><td>:</td><td><input type="number" id="discount" value="0" oninput="calculateTotal()" /></td></tr>
         <tr><td>Other Charges</td><td>:</td><td><input type="text" /></td></tr>
-        <tr><td><strong>Gross Amount</strong></td><td>:</td><td><span id="gross">0.00</span></td></tr>
+        <tr><td><strong>Gross Amount</strong></td><td>:</td><td><span id="gross">₹ 0.00</span></td></tr>
       </table>
     </div>
   </div>
@@ -183,24 +183,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-  // Load GitHub logo as Base64
-  async function loadLogoAsBase64(url, imgElementId) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const reader = new FileReader();
-    reader.onloadend = function() {
-      document.getElementById(imgElementId).src = reader.result;
-    }
-    reader.readAsDataURL(blob);
-  }
-  loadLogoAsBase64('https://raw.githubusercontent.com/guruprasadklkrn-star/trial/5947bfbf2157ba6c92aa8f1b91f13caecc17efeb/logo.png', 'logoImg');
-
-  // All your existing JS functionality below
   function calculateRow(input) {
     let row = input.closest("tr");
-    let price = parseFloat(row.querySelector(".price")?.value) || 0;
-    let qty = parseFloat(row.querySelector(".qty")?.value) || 0;
-    row.querySelector(".amount").innerText = (price * qty).toFixed(2);
+    let price = row.querySelector(".price")?.value;
+    let qty = row.querySelector(".qty")?.value;
+    
+    if(price.trim() === "" || qty.trim() === "") {
+      row.querySelector(".amount").innerText = "";
+    } else {
+      row.querySelector(".amount").innerText = (parseFloat(price) * parseFloat(qty)).toFixed(2);
+    }
+    
     calculateTotal();
     addRowIfNeeded();
   }
@@ -212,18 +205,21 @@
     const qty = parseFloat(qtyInput.value || 0);
     const price = parseFloat(priceInput.value || 0);
     qtyInput.dataset.price = price;
-    row.querySelector('.extra-amount').innerText = (price * qty).toFixed(2);
+    row.querySelector('.extra-amount').innerText = (qty && price) ? (price * qty).toFixed(2) : '';
     calculateTotal();
   }
 
   function calculateTotal() {
     let subtotal = 0;
     document.querySelectorAll(".amount, .extra-amount").forEach(span => {
-      subtotal += parseFloat(span.innerText) || 0;
+      let val = span.innerText.trim();
+      if(val !== "") subtotal += parseFloat(val) || 0;
     });
     document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+
     let discount = parseFloat(document.getElementById("discount").value) || 0;
-    document.getElementById("gross").innerText = (subtotal - discount).toFixed(2);
+    let gross = subtotal - discount;
+    document.getElementById("gross").innerText = "₹ " + gross.toFixed(2);
   }
 
   function addRowIfNeeded() {
@@ -246,7 +242,7 @@
       <td><input type="text" /></td>
       <td><input type="number" class="small-input price" oninput="calculateRow(this)" /></td>
       <td><input type="number" class="small-input qty" oninput="calculateRow(this)" /></td>
-      <td><span class="amount">0.00</span></td>
+      <td><span class="amount"></span></td>
     `;
     tbody.appendChild(newRow);
     newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
