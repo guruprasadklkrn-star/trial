@@ -43,9 +43,26 @@
     #shopTagline { font-size: 12px; font-style: italic; text-align: center; margin-top: 5px; }
 
     @media print {
-      button { display: none; }
-      body { margin: 0; }
-      .container { border: none; }
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+      }
+
+      button { display: none !important; }
+
       input {
         border: none !important; outline: none !important; background: none !important;
         -webkit-appearance: none !important; appearance: none !important; padding: 0 !important;
@@ -53,6 +70,9 @@
       input::-webkit-inner-spin-button, input::-webkit-calendar-picker-indicator {
         display: none !important; -webkit-appearance: none !important;
       }
+
+      table { page-break-inside: auto; }
+      tr { page-break-inside: avoid; page-break-after: auto; }
     }
   </style>
 </head>
@@ -304,4 +324,3 @@
 </script>
 </body>
 </html>
-
