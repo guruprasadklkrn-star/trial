@@ -63,9 +63,8 @@
 <body>
 
 <div class="container" id="invoice">
-  <!-- HEADER WITH LOGO, SHOP NAME, AND TAGLINE -->
   <div class="header">
-    <img src="https://raw.githubusercontent.com/guruprasadklkrn-star/trial/5947bfbf2157ba6c92aa8f1b91f13caecc17efeb/logo.png" alt="Murugan Laundry Logo">
+    <img id="logoImg" src="" alt="Murugan Laundry Logo">
     <h2>MURUGAN LAUNDRY</h2>
 
     <select id="shopAddressSelect" onchange="toggleShopAddressInput(this)"
@@ -104,7 +103,6 @@
 
   <div class="line"></div>
 
-  <!-- Dynamic Rows Table -->
   <table>
     <thead>
       <tr>
@@ -134,7 +132,6 @@
     </tbody>
   </table>
 
-  <!-- Extra Services Table -->
   <table>
     <thead>
       <tr><th>Service Type</th><th>Price</th><th>Qty</th><th>Amount</th></tr>
@@ -155,7 +152,6 @@
     </tbody>
   </table>
 
-  <!-- Totals -->
   <div class="totals">
     <div class="left">
       <p><strong>Timings:</strong> 9:00 am to 9:00 pm</p>
@@ -163,10 +159,10 @@
     </div>
     <div class="right">
       <table>
-        <tr><td>Sub Total</td><td>:</td><td><span id="subtotal">0.00</span></td></tr>
+        <tr><td>Sub Total</td><td>:</td><td><span id="subtotal"></span></td></tr>
         <tr><td>Discount</td><td>:</td><td><input type="number" id="discount" value="0" oninput="calculateTotal()" /></td></tr>
         <tr><td>Other Charges</td><td>:</td><td><input type="text" /></td></tr>
-        <tr><td><strong>Gross Amount</strong></td><td>:</td><td><span id="gross">₹ 0.00</span></td></tr>
+        <tr><td><strong>Gross Amount</strong></td><td>:</td><td><span id="gross"></span></td></tr>
       </table>
     </div>
   </div>
@@ -174,26 +170,29 @@
   <div class="footer-line"></div>
 </div>
 
-<!-- Save/Print buttons -->
 <div style="text-align:center; margin-top:20px;">
   <button onclick="saveAsPDF()">Save to PDF</button>
   <button onclick="prepareShopAddressForOutput(); window.print(); restoreShopAddressAfterOutput();">Print</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
+  async function loadLogoAsBase64(url, imgElementId) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      document.getElementById(imgElementId).src = reader.result;
+    }
+    reader.readAsDataURL(blob);
+  }
+  loadLogoAsBase64('https://raw.githubusercontent.com/guruprasadklkrn-star/trial/5947bfbf2157ba6c92aa8f1b91f13caecc17efeb/logo.png', 'logoImg');
+
   function calculateRow(input) {
     let row = input.closest("tr");
-    let price = row.querySelector(".price")?.value;
-    let qty = row.querySelector(".qty")?.value;
-    
-    if(price.trim() === "" || qty.trim() === "") {
-      row.querySelector(".amount").innerText = "";
-    } else {
-      row.querySelector(".amount").innerText = (parseFloat(price) * parseFloat(qty)).toFixed(2);
-    }
-    
+    let price = parseFloat(row.querySelector(".price")?.value);
+    let qty = parseFloat(row.querySelector(".qty")?.value);
+    row.querySelector(".amount").innerText = (price && qty) ? (price * qty).toFixed(2) : '';
     calculateTotal();
     addRowIfNeeded();
   }
@@ -212,14 +211,12 @@
   function calculateTotal() {
     let subtotal = 0;
     document.querySelectorAll(".amount, .extra-amount").forEach(span => {
-      let val = span.innerText.trim();
-      if(val !== "") subtotal += parseFloat(val) || 0;
+      subtotal += parseFloat(span.innerText) || 0;
     });
-    document.getElementById("subtotal").innerText = subtotal.toFixed(2);
-
+    document.getElementById("subtotal").innerText = subtotal ? `₹${subtotal.toFixed(2)}` : '';
     let discount = parseFloat(document.getElementById("discount").value) || 0;
     let gross = subtotal - discount;
-    document.getElementById("gross").innerText = "₹ " + gross.toFixed(2);
+    document.getElementById("gross").innerText = gross ? `₹${gross.toFixed(2)}` : '';
   }
 
   function addRowIfNeeded() {
@@ -245,8 +242,6 @@
       <td><span class="amount"></span></td>
     `;
     tbody.appendChild(newRow);
-    newRow.querySelector(".desc-input").addEventListener("input", addRowIfNeeded);
-    newRow.querySelector(".qty").addEventListener("input", addRowIfNeeded);
   }
 
   function toggleShopAddressInput(select) {
